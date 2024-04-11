@@ -47,6 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         userEmail = jwtService.extractUsername(jwt);
         if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
+            System.out.println("----------------------------------------------------------->");
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
             if(jwtService.isTokenValid(jwt, userDetails)){
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
@@ -64,7 +65,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         }
     } // This is a filter per pone request
-
-
-
 }

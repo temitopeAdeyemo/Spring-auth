@@ -25,6 +25,11 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token){
+        System.out.println("All claims:::" + Jwts.parserBuilder()
+                .setSigningKey(getSignInKey())
+                .build().parseClaimsJws(token)
+                .getBody());
+
         return Jwts.parserBuilder()
                 .setSigningKey(getSignInKey())
                 .build().parseClaimsJws(token)
@@ -33,6 +38,7 @@ public class JwtService {
 
     private <T>T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
+        System.out.println("claimsResolver.apply(claims) ::" + claimsResolver.apply(claims));
         return claimsResolver.apply(claims);
     }
 
@@ -53,14 +59,6 @@ public class JwtService {
         JwtBuilder sign = setJwtExpiration.signWith(getSignInKey(), SignatureAlgorithm.HS256);
         
         return sign.compact();
-        
-//        return Jwts.builder()
-//                .setClaims(extractClaims)
-//                .setSubject(userDetails.getUsername())
-//                .setIssuedAt(new Date(System.currentTimeMillis()))
-//                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
-//                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-//                .compact();
     }
     
     public boolean isTokenValid(String token, UserDetails userDetails){
